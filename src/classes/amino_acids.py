@@ -47,6 +47,7 @@ class AbstractAminoAcid(ABC):
     symbol: the one-letter symbol of the amino acid
     symbol_3: the three-letter symbol of the amino acid
     codons: the codons that code for the amino acid
+    essentiality: the essentiality of the amino acid
     polarity: the polarity of the amino acid
     charge: the charge of the amino acid
     smiles: the SMILES representation of the amino acid
