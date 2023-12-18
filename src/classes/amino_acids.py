@@ -1,11 +1,24 @@
 from abc import ABC
-from collections import UserDict
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Dict
+from typing import List
+
+
+
+class Essentiality(Enum):
+    """The essentiality of an amino acid is determined by whether or not it is required for life. Essential amino acids
+    cannot be made by the body, and must be obtained from food. Non-essential amino acids can be made by the body, and
+    do not need to be obtained from food."""
+
+    ESSENTIAL = "Essential"
+    NON_ESSENTIAL = "Non-essential"
+    CONDITIONALLY_ESSENTIAL = "Conditionally Essential"
 
 
 class Charge(Enum):
+    """The charge of an amino acid is determined by the side chain. The side chain can be neutral, positively charged,
+    or negatively charged. """
+
     POSITIVE = "+"
     NEGATIVE = "-"
     NEUTRAL = "0"
@@ -13,6 +26,9 @@ class Charge(Enum):
 
 
 class Polarity(Enum):
+    """The polarity of an amino acid is determined by the side chain. The side chain can be polar, non-polar, basic
+    polar, or Bronsted acid/base."""
+
     NON_POLAR = "Non-polar"
     POLAR = "Polar"
     BASIC_POLAR = "Basic Polar"
@@ -23,10 +39,28 @@ class Polarity(Enum):
 
 @dataclass(init=False, repr=True, eq=True, order=True, unsafe_hash=False, frozen=False)
 class AbstractAminoAcid(ABC):
+    """An amino acid is an organic molecule that is made up of a basic amino group (−NH2), an acidic carboxyl group
+    (−COOH), and an organic R group (or side chain) that is unique to each amino acid.
+
+    Member variables:
+    name: the name of the amino acid
+    symbol: the one-letter symbol of the amino acid
+    symbol_3: the three-letter symbol of the amino acid
+    codons: the codons that code for the amino acid
+    polarity: the polarity of the amino acid
+    charge: the charge of the amino acid
+    smiles: the SMILES representation of the amino acid
+    inchi_key: the InChI Key representation of the amino acid
+    IUPAC_name: the IUPAC name of the amino acid
+    Monoisotopic_mass: the monoisotopic mass of the amino acid
+    """
+
+
     name: str
     symbol: str
     symbol_3: str
     codons: List[str]
+    essentiality: Essentiality
     polarity: Polarity
     charge: Charge
     smiles: str
@@ -42,6 +76,7 @@ class Alanine(AbstractAminoAcid):
         self.symbol = "A"
         self.symbol_3 = "Ala"
         self.codons = ["GCT", "GCC", "GCA", "GCG"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "CC(C)(C(=O)O)N"
@@ -57,6 +92,7 @@ class Arginine(AbstractAminoAcid):
         self.symbol = "R"
         self.symbol_3 = "Arg"
         self.codons = ["CGT", "CGC", "CGA", "CGG", "AGA", "AGG"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.BASIC_POLAR
         self.charge = Charge.POSITIVE
         self.smiles = "NCCCCNC(=N)N"
@@ -72,6 +108,7 @@ class Asparagine(AbstractAminoAcid):
         self.symbol = "N"
         self.symbol_3 = "Asn"
         self.codons = ["AAT", "AAC"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "NC(C(=O)O)C"
@@ -87,6 +124,7 @@ class AsparticAcid(AbstractAminoAcid):
         self.symbol = "D"
         self.symbol_3 = "Asp"
         self.codons = ["GAT", "GAC"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.BRONSTED_A
         self.charge = Charge.NEGATIVE
         self.smiles = "NC(C(=O)O)C(=O)O"
@@ -102,6 +140,7 @@ class Cysteine(AbstractAminoAcid):
         self.symbol = "C"
         self.symbol_3 = "Cys"
         self.codons = ["TGT", "TGC"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.BRONSTED_B
         self.charge = Charge.NEUTRAL
         self.smiles = "SCC(C(=O)O)N"
@@ -117,6 +156,7 @@ class GlutamicAcid(AbstractAminoAcid):
         self.symbol = "E"
         self.symbol_3 = "Glu"
         self.codons = ["GAA", "GAG"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.BRONSTED_A
         self.charge = Charge.NEGATIVE
         self.smiles = "N[C@@H](CCC(=O)O)C(=O)O"
@@ -132,6 +172,7 @@ class Glutamine(AbstractAminoAcid):
         self.symbol = "Q"
         self.symbol_3 = "Gln"
         self.codons = ["CAA", "CAG"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "N[C@@H](CCC(N)=O)C(=O)O"
@@ -147,6 +188,7 @@ class Glycine(AbstractAminoAcid):
         self.symbol = "G"
         self.symbol_3 = "Gly"
         self.codons = ["GGT", "GGC", "GGA", "GGG"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "NCC(=O)O"
@@ -163,6 +205,7 @@ class Histidine(AbstractAminoAcid):
         self.symbol_3 = "His"
         self.codons = ["CAT", "CAC"]
         self.polarity = Polarity.BRONSTED_A
+        self.essentiality = Essentiality.ESSENTIAL
         self.charge = Charge.NEUTRAL
         self.smiles = "N[C@@H](Cc1cnc[nH]1)C(=O)O"
         self.inchi_key = "NMBLJWWWAFQDNQ-UHFFFAOYSA-N"
@@ -177,6 +220,7 @@ class Isoleucine(AbstractAminoAcid):
         self.symbol = "I"
         self.symbol_3 = "Ile"
         self.codons = ["ATT", "ATC", "ATA"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "CC[C@H](C)[C@@H](C(=O)O)N"
@@ -192,6 +236,7 @@ class Leucine(AbstractAminoAcid):
         self.symbol = "L"
         self.symbol_3 = "Leu"
         self.codons = ["TTA", "TTG", "CTT", "CTC", "CTA", "CTG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "CC[C@@H](C)[C@@H](C(=O)O)N"
@@ -207,6 +252,7 @@ class Lysine(AbstractAminoAcid):
         self.symbol = "K"
         self.symbol_3 = "Lys"
         self.codons = ["AAA", "AAG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.BRONSTED_A
         self.charge = Charge.POSITIVE
         self.smiles = "NCCCC[C@H](N)C(=O)O"
@@ -222,6 +268,7 @@ class Methionine(AbstractAminoAcid):
         self.symbol = "M"
         self.symbol_3 = "Met"
         self.codons = ["ATG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "SC[C@H](C(=O)O)N"
@@ -237,6 +284,7 @@ class Phenylalanine(AbstractAminoAcid):
         self.symbol = "F"
         self.symbol_3 = "Phe"
         self.codons = ["TTT", "TTC"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "N[C@@H](Cc1ccccc1)C(=O)O"
@@ -252,6 +300,7 @@ class Proline(AbstractAminoAcid):
         self.symbol = "P"
         self.symbol_3 = "Pro"
         self.codons = ["CCT", "CCC", "CCA", "CCG"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "N1[C@@H](CCC1)C(=O)O"
@@ -267,6 +316,7 @@ class Serine(AbstractAminoAcid):
         self.symbol = "S"
         self.symbol_3 = "Ser"
         self.codons = ["TCT", "TCC", "TCA", "TCG", "AGT", "AGC"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "NC(CO)C(=O)O"
@@ -282,6 +332,7 @@ class Threonine(AbstractAminoAcid):
         self.symbol = "T"
         self.symbol_3 = "Thr"
         self.codons = ["ACT", "ACC", "ACA", "ACG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "NC([C@@H](C)O)C(=O)O"
@@ -297,6 +348,7 @@ class Tryptophan(AbstractAminoAcid):
         self.symbol = "W"
         self.symbol_3 = "Trp"
         self.codons = ["TGG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "N[C@@H](Cc1c[nH]c2ccccc12)C(=O)O"
@@ -312,6 +364,7 @@ class Tyrosine(AbstractAminoAcid):
         self.symbol = "Y"
         self.symbol_3 = "Tyr"
         self.codons = ["TAT", "TAC"]
+        self.essentiality = Essentiality.CONDITIONALLY_ESSENTIAL
         self.polarity = Polarity.BRONSTED_A
         self.charge = Charge.NEUTRAL
         self.smiles = "N[C@@H](Cc1ccc(O)cc1)C(=O)O"
@@ -327,6 +380,7 @@ class Valine(AbstractAminoAcid):
         self.symbol = "V"
         self.symbol_3 = "Val"
         self.codons = ["GTT", "GTC", "GTA", "GTG"]
+        self.essentiality = Essentiality.ESSENTIAL
         self.polarity = Polarity.NON_POLAR
         self.charge = Charge.NEUTRAL
         self.smiles = "CC(C)[C@@H](C(=O)O)N"
@@ -342,6 +396,7 @@ class Selenocysteine(AbstractAminoAcid):
         self.symbol = "U"
         self.symbol_3 = "Sec"
         self.codons = ["TGA"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.UNKNOWN
         self.charge = Charge.UNKNOWN
         self.smiles = "SC[C@H](C(=O)O)N"
@@ -357,6 +412,7 @@ class Pyrrolysine(AbstractAminoAcid):
         self.symbol = "O"
         self.symbol_3 = "Pyl"
         self.codons = ["TAG"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.UNKNOWN
         self.charge = Charge.UNKNOWN
         self.smiles = "NCCCC[C@H](N)C(=O)O"
@@ -372,6 +428,7 @@ class UnspecifiedOrUnknown(AbstractAminoAcid):
         self.symbol = "*"
         self.symbol_3 = "Xaa"
         self.codons = ["NNN"]
+        self.essentiality = Essentiality.NON_ESSENTIAL
         self.polarity = Polarity.UNKNOWN
         self.charge = Charge.UNKNOWN
         self.smiles = "Unknown"
@@ -380,36 +437,3 @@ class UnspecifiedOrUnknown(AbstractAminoAcid):
         self.Monoisotopic_mass = 0.0000
 
 
-class Codons(UserDict):
-    """AminoAcids class contains all the amino acids as attributes.
-    The attributes are instances of the AbstractAminoAcid class.
-    """
-
-    _acids: dict = Dict[str, AbstractAminoAcid]
-    data: dict = Dict[str, AbstractAminoAcid]
-
-    def __init__(self):
-        super().__init__()
-        self._acids = {Alanine().symbol: Alanine(), Arginine().symbol: Arginine(), Asparagine().symbol: Asparagine(),
-                       AsparticAcid().symbol: AsparticAcid(), Cysteine().symbol: Cysteine(),
-                       GlutamicAcid().symbol: GlutamicAcid(), Glutamine().symbol: Glutamine(),
-                       Glycine().symbol: Glycine(), Histidine().symbol: Histidine(), Isoleucine().symbol: Isoleucine(),
-                       Leucine().symbol: Leucine(), Lysine().symbol: Lysine(), Methionine().symbol: Methionine(),
-                       Phenylalanine().symbol: Phenylalanine(), Proline().symbol: Proline(), Serine().symbol: Serine(),
-                       Threonine().symbol: Threonine(), Tryptophan().symbol: Tryptophan(),
-                       Tyrosine().symbol: Tyrosine(), Valine().symbol: Valine(),
-                       Selenocysteine().symbol: Selenocysteine(), Pyrrolysine().symbol: Pyrrolysine(),
-                       UnspecifiedOrUnknown().symbol: UnspecifiedOrUnknown()}
-
-        self.data = {}
-
-        for k, v in self.acids.items():
-            for codon in v.codons:
-                self.data[codon.lower()] = v
-
-    @property
-    def acids(self):
-        """Returns the amino acids dictionary.
-        :return: the amino acids dictionary
-        """
-        return self._acids
