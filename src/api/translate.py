@@ -1,4 +1,6 @@
-from classes.amino_acids import *
+from classes.codons import Codons
+from classes.amino_acids import UnspecifiedOrUnknown
+
 
 def translate_fasta(fasta: str) -> str:
     """

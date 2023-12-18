@@ -1,4 +1,5 @@
-from src.classes.amino_acids import Codons, AbstractAminoAcid, Methionine
+from src.classes.amino_acids import AbstractAminoAcid, Methionine
+from src.classes.codons import Codons
 from src.api.translate import translate_fasta
 
 def test_fasta_01():
