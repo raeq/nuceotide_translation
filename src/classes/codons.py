@@ -1,6 +1,6 @@
 from collections import UserDict
 from typing import Dict
-
+from src.exceptions import invalidcodonexception
 from src.classes.amino_acids import *
 
 
@@ -35,6 +35,18 @@ class Codons(UserDict):
         for k, v in self.acids.items():
             for codon in v.codons:
                 self.data[codon.lower()] = v
+
+    def __getitem__(self, key):
+        """Returns the amino acid corresponding to the codon.
+        :param key: the codon
+        :return: the amino acid corresponding to the codon
+        """
+
+        if any(c not in {'a', 'c', 'g', 't'} for c in key.lower()):
+            raise invalidcodonexception.InvalidCodonException(f"Key must be acgt {key=}")
+
+        return self.data[key.lower()]
+
 
     @property
     def acids(self):
